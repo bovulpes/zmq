@@ -1,5 +1,5 @@
-The code examples (from the book "ZeroMQ" by Peter Hintjens, O'Reilly)
-----------------------------------------------------------------------
+The code examples (from the book ZeroMQ by Peter Hintjens, O'Reilly)
+--------------------------------------------------------------------
 
 https://github.com/imatix/zguide/tree/master/examples
 
