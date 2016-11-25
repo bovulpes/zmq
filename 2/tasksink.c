@@ -23,20 +23,26 @@ int main (int argc, char *argv [])
     int64_t start_time = s_clock ();
 
     //  Process 100 confirmations
-    char string_2[10];
     int task_nbr;
     for (task_nbr = 0; task_nbr < nofTasks; task_nbr++) {
-        char *string = s_recv (receiver);
-	
-	sprintf(string_2,"%010d ",atoi(string));
-        printf ("%s", string_2);
+
+        zmq_msg_t message;
+        zmq_msg_init(&message);
+        int size = zmq_msg_recv(&message,receiver,0);
+        if (size == -1) break;
+        char *string = (char*)malloc(size+1);
+        memcpy(string,zmq_msg_data(&message),size);
+        zmq_msg_close(&message);
+        string[size] = 0;
+
+        printf ("%s", string);
         free (string);
         if ((task_nbr+1) % 5 == 0)
             printf ("\n");
         else
             printf ("");
         fflush (stdout);
-	
+
     }
     //  Calculate and report duration of batch
     printf ("Total elapsed time: %d msec\n", 
@@ -46,3 +52,4 @@ int main (int argc, char *argv [])
     zmq_ctx_destroy (context);
     return 0;
 }
+

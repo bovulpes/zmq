@@ -18,6 +18,7 @@ int main (int argc, char *argv [])
 
     //  Socket to send start of batch message on
     void *sink = zmq_socket (context, ZMQ_PUSH);
+    //zmq_connect (sink, "tcp://172.17.5.8:5558");
     zmq_connect (sink, "tcp://localhost:5558");
 
     printf ("Press Enter when the workers are ready: ");
@@ -32,7 +33,7 @@ int main (int argc, char *argv [])
     srandom ((unsigned) time (NULL));
 
     //  Send 100 tasks
-    char string[10];
+    char string[8];
     int task_nbr;
     int total_msec = 0;     //  Total expected cost in msecs
     for (task_nbr = 0; task_nbr < nofTasks; task_nbr++) {
@@ -40,16 +41,20 @@ int main (int argc, char *argv [])
         //  Random workload from 1 to 100msecs
         workload = randof (100) + 1;
         total_msec += workload;
-        sprintf (string, "%010d ", workload);
-        s_send (sender, string);
-	
-        //printf("taskvent: workload %d %s \n",workload,string);
-        printf ("%s", string);
+        sprintf (string, "%06d", workload);
+
+        zmq_msg_t message;
+        zmq_msg_init_size(&message,strlen(string));
+        memcpy(zmq_msg_data(&message),string,strlen(string));
+        int size = zmq_msg_send(&message,sender,0);
+        zmq_msg_close(&message);
+
+        printf ("%s ", string);
         if ((task_nbr+1) % 5 == 0)
             printf ("\n");
         else
             printf ("");
-	
+
         //s_sleep (atoi (string));    // wait a bit
     }
     printf ("Total expected cost: %d msec\n", total_msec);
@@ -59,3 +64,4 @@ int main (int argc, char *argv [])
     zmq_ctx_destroy (context);
     return 0;
 }
+
