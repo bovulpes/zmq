@@ -47,7 +47,7 @@ int main (int argc, char *argv [])
         int size_1 = zmq_msg_send(&message_1,sender,0);
         zmq_msg_close(&message_1);
 
-        free (string);
+        //free (string);
         if ((task_nbr+1) % 5 == 0)
             printf ("\n");
         else

@@ -17,7 +17,7 @@ int main (int argc, char *argv [])
 
     //  Wait for start of batch
     char *string_1 = s_recv (receiver);
-    free (string_1);
+    //free (string_1);
 
     //  Start our clock now
     int64_t start_time = s_clock ();
@@ -36,7 +36,7 @@ int main (int argc, char *argv [])
         string[size] = 0;
 
         printf ("%s", string);
-        free (string);
+        //free (string);
         if ((task_nbr+1) % 5 == 0)
             printf ("\n");
         else
